@@ -1,0 +1,22 @@
+### Upload an image
+POST http://localhost:8081/images/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="title"
+
+My Portrait
+--WebAppBoundary
+Content-Disposition: form-data; name="caption"
+
+Portrait with books
+--WebAppBoundary
+Content-Disposition: form-data; name="profileId"
+
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="my-portrait.jpg"
+Content-Type: image/jpeg
+
+< D:\artist-copilot\uploads\my-portrait.jpg
+--WebAppBoundary--
