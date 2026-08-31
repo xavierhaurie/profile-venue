@@ -25,7 +25,6 @@
         <module>image-service</module>
         <module>profile-service</module>
         <module>venue-service</module>
-        <module>profile-gateway</module>
     </modules>
 
     <!-- 4. Shared properties every child inherits -->
