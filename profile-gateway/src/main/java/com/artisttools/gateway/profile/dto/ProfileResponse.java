@@ -1,7 +1,5 @@
 package com.artisttools.gateway.profile.dto;
 
-import com.artisttools.gateway.profile.dto.VenueSummary;
-
 import java.util.List;
 
 public record ProfileResponse(
@@ -9,6 +7,6 @@ public record ProfileResponse(
         String name,
         String email,
         String description,
-        List<VenueSummary> venues
+        List<ProfileVenueSummary> venues
 ) {
 }
