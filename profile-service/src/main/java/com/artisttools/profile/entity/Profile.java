@@ -1,4 +1,4 @@
-package com.artistprofile.profilevenue.entity;
+package com.artisttools.profile.entity;
 
 import jakarta.persistence.*;
 
@@ -14,8 +14,8 @@ public class Profile {
     String name;
     @Column(name = "email")
     String email;
-    @Column(name = "notes")
-    String notes;
+    @Column(name = "description")
+    String description;
     // later, list of images
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProfileVenue> profileVenues = new ArrayList<>();
@@ -54,12 +54,12 @@ public class Profile {
         this.email = email;
     }
 
-    public String getNotes() {
-        return notes;
+    public String getDescription() {
+        return description;
     }
 
-    public void setNotes(String description) {
-        this.notes = notes;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<ProfileVenue> getProfileVenues() {

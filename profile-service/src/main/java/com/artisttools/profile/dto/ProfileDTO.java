@@ -1,18 +1,18 @@
-package com.artistprofile.profilevenue.dto;
+package com.artisttools.profile.dto;
 
-import com.artistprofile.profilevenue.entity.Profile;
+import com.artisttools.profile.entity.Profile;
 
 public record ProfileDTO(Long id, String name, String email, String profileNotes) {
 
     static public ProfileDTO from(Profile p) {
-        return new ProfileDTO(p.getId(), p.getName(), p.getEmail(), p.getNotes());
+        return new ProfileDTO(p.getId(), p.getName(), p.getEmail(), p.getDescription());
     }
 
     public Profile toEntity() {
         Profile profile = new Profile();
         profile.setName(this.name);
         profile.setEmail(this.email);
-        profile.setNotes(this.profileNotes);
+        profile.setDescription(this.profileNotes);
         // Map other fields if necessary
         return profile;
     }

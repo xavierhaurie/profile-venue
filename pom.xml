@@ -21,10 +21,11 @@
 
     <!-- 3. The list of services. This is the heart of the parent. -->
     <modules>
-        <module>profile-venue-service</module>
+        <module>profile-gateway</module>
         <module>image-service</module>
         <module>profile-service</module>
         <module>venue-service</module>
+        <module>profile-gateway</module>
     </modules>
 
     <!-- 4. Shared properties every child inherits -->
