@@ -62,7 +62,7 @@ public class GatewayService {
                 })
                 .toList();
 
-        var sortedVenues = venues.stream()
+        var groupedVenues = venues.stream()
                 .collect(Collectors.groupingBy(ProfileVenueSummary::venueId));
 
         var profileResponse = new ProfileResponse(
@@ -70,7 +70,7 @@ public class GatewayService {
                 profile.name(),
                 profile.email(),
                 profile.description(),
-                sortedVenues
+                groupedVenues
         );
         return profileResponse;
     }
