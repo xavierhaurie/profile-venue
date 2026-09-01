@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import com.artisttools.gateway.profile.dto.ProfileVenueSummary;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GatewayService {
@@ -27,7 +29,7 @@ public class GatewayService {
         this.venueServiceBaseUrl = venueServiceBaseUrl;
     }
 
-    public ProfileResponse getProfile(Long profileId) {
+    public ProfileResponse getProfileWithVenues(Long profileId) {
         ProfileSummary profile = restClient.get()
                 .uri(profileServiceBaseUrl + "/profile/{profileId}", profileId)
                 .retrieve()
@@ -52,20 +54,23 @@ public class GatewayService {
                     return new ProfileVenueSummary(
                             profileVenue.profileId(),
                             profileVenue.venueId(),
-                            venue.name(),
-                            venue.email(),
-                            venue.description(),   // or venue.venueNotes() if you keep the old name
-                            profileVenue.notes()
+                            Optional.ofNullable(venue.name()).orElseThrow(() -> new RuntimeException("venue has no name")),
+                            Optional.ofNullable(venue.email()).orElse(""),
+                            Optional.ofNullable(venue.description()).orElse(""),
+                            Optional.ofNullable(profileVenue.notes()).orElse("")
                     );
                 })
                 .toList();
+
+        var sortedVenues = venues.stream()
+                .collect(Collectors.groupingBy(ProfileVenueSummary::venueId));
 
         var profileResponse = new ProfileResponse(
                 profile.id(),
                 profile.name(),
                 profile.email(),
                 profile.description(),
-                venues
+                sortedVenues
         );
         return profileResponse;
     }

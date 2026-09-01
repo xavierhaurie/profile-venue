@@ -19,6 +19,6 @@ public class GatewayController {
 
     @GetMapping("/profile/{profileId}")
     public ProfileResponse getProfile(@PathVariable Long profileId) {
-        return gatewayService.getProfile(profileId);
+        return gatewayService.getProfileWithVenues(profileId);
     }
 }
