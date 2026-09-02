@@ -1,5 +1,4 @@
 1. Start Docker desktop (which will start Docker daemon)
-2. cd to D:\artist-copilot
 3. If any MySQL data source (not docker container) is running, drop it.
 4. Create a new, empty MySQL data source. Set user to root and pw to rootpass.
 5. run: docker compose -f docker-compose.local.yaml down

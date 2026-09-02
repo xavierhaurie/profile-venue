@@ -1,0 +1,70 @@
+package com.profilevenue.image.controller;
+
+import com.profilevenue.image.dto.ImageDTO;
+import com.profilevenue.image.entity.Image;
+import com.profilevenue.image.exception.ImageNotFoundException;
+import com.profilevenue.image.service.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.profilevenue.image.repository.ImageRepository;   // adjust to actual package
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+public class ImageController {
+
+    private final ImageRepository imageRepository;
+    private final StorageService storageService;
+
+    public ImageController(ImageRepository imageRepository,
+                           StorageService storageService) {
+        this.imageRepository = imageRepository;
+        this.storageService = storageService;
+    }
+
+    private final Logger logger = LoggerFactory.getLogger(ImageController.class);
+
+    @PostMapping(value = "/image/upload", consumes = "multipart/form-data")
+    public ResponseEntity<Image> uploadImage(
+        @ModelAttribute ImageDTO imageDTO,
+        @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            logger.info("Received empty file to upload");
+            return ResponseEntity.status(500).build();
+        }
+        logger.info("Received upload: {} ({} bytes)",
+                file.getOriginalFilename(), file.getSize());
+        String url;
+        try {
+            url = storageService.upload(file);
+        } catch (Exception e) {
+            String errorMessage = "Error saving the file just uploaded " + file.getOriginalFilename();
+            logger.error(errorMessage, e);
+            return ResponseEntity.status(500).build();
+        }
+
+        // Save the local information
+        Image image = imageDTO.toEntity();
+        image.setUrl(url);
+        Image saved = imageRepository.save(image);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    @GetMapping("/image/{imageId}")
+    public ImageDTO getImage(@PathVariable Long imageId) {
+
+        logger.info("getImage() called with imageId {}", imageId);
+        ImageDTO imageDTO = imageRepository.findById(imageId)
+                .map(ImageDTO::from)
+                .orElseThrow(() -> new ImageNotFoundException(imageId));
+
+        return imageDTO;
+    }
+
+
+}
+
