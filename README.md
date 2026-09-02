@@ -21,7 +21,7 @@ THIS IS WORK IN PROGRESS.
 
 Next steps:
 - Some end points of the gateway and services have not been implemented yet.
-- Implement venues gateway and services
+- Implement venues gateway, as well as missing end points in venue service
 - Implement authentication and authorization
 - Host on Google Cloud
 - Dynamically scale services and gateway
