@@ -1,5 +1,6 @@
-# artist-copilot
-Host profiles and venues. They could be customers and stores.
+# profiles and venues using microservices
+
+Hosts profiles and venues. They could be customers and stores.
 
 There is one gateway service, and 3 microservices: profile-service, venue-service, image-service.
 
