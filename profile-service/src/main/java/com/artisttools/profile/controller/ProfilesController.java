@@ -80,4 +80,16 @@ public class ProfilesController {
         return ProfileVenueDTO.from(pv);
     }
 
+    // CALL TO REPOSITORY etc. NEEDS TO BE IN A SERVICE CLASS
+    @GetMapping("/profile/{profileId}/images")
+    public List<ProfileImageDTO> getProfileImages(@PathVariable Long profileId) {
+        logger.info("getProfileImages() called with profile_id {}", profileId);
+        List<ProfileImageDTO> images = profileImageRepository.findByProfileId(profileId)
+                .stream()
+                .map( ProfileImageDTO::from)
+                .toList();
+        logger.info("getProfileImages({}) is returning {} records", profileId, images.size());
+
+        return images;
+    }
 }
