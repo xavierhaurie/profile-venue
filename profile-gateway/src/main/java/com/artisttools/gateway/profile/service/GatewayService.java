@@ -1,13 +1,11 @@
 package com.artisttools.gateway.profile.service;
 
-import com.artisttools.gateway.profile.dto.ProfileResponse;
-import com.artisttools.gateway.profile.dto.ProfileSummary;
-import com.artisttools.gateway.profile.dto.VenueSummary;
+import com.artisttools.gateway.profile.dto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import com.artisttools.gateway.profile.dto.ProfileVenueSummary;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,18 +16,21 @@ public class GatewayService {
     private final RestClient restClient;
     private final String profileServiceBaseUrl;
     private final String venueServiceBaseUrl;
+    private final String imageServiceBaseUrl;
 
     public GatewayService(
             RestClient.Builder restClientBuilder,
             @Value("${services.profile-service.url}") String profileServiceBaseUrl,
-            @Value("${services.venue-service.url}") String venueServiceBaseUrl
+            @Value("${services.venue-service.url}") String venueServiceBaseUrl,
+            @Value("${services.image-service.url}") String imageServiceBaseUrl
     ) {
         this.restClient = restClientBuilder.build();
         this.profileServiceBaseUrl = profileServiceBaseUrl;
         this.venueServiceBaseUrl = venueServiceBaseUrl;
+        this.imageServiceBaseUrl = imageServiceBaseUrl;
     }
 
-    public ProfileResponse getProfileWithVenues(Long profileId) {
+    public ProfileResponse getProfileWithVenuesAndImageUrls(Long profileId) {
         ProfileSummary profile = restClient.get()
                 .uri(profileServiceBaseUrl + "/profile/{profileId}", profileId)
                 .retrieve()
@@ -39,6 +40,7 @@ public class GatewayService {
             throw new IllegalArgumentException("Profile summary not found for userId: " + profileId);
         }
 
+        // Venues attached to this profile
         List<ProfileVenueSummary> profileVenues = restClient.get()
                 .uri(profileServiceBaseUrl + "/profile/{profileId}/venues", profile.id())
                 .retrieve()
@@ -65,13 +67,39 @@ public class GatewayService {
         var groupedVenues = venues.stream()
                 .collect(Collectors.groupingBy(ProfileVenueSummary::venueId));
 
+        // images attached to this profile
+        List<ProfileImageSummary> profileImages = restClient.get()
+                .uri(profileServiceBaseUrl + "/profile/{profileId}/images", profile.id())
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
+
+        List<ProfileImageSummary> images = profileImages.stream()
+                .map(profileImage -> {
+                    ImageSummary image = restClient.get()
+                            .uri(imageServiceBaseUrl + "/image/{imageId}", profileImage.imageId())
+                            .retrieve()
+                            .body(ImageSummary.class);
+
+                    return new ProfileImageSummary(
+                            profileImage.profileId(),
+                            profileImage.imageId(),
+                            Optional.ofNullable(image.title()).orElseThrow(() -> new RuntimeException("image has no title")),
+                            Optional.ofNullable(image.caption()).orElse(""),
+                            Optional.ofNullable(image.url()).orElse(""),
+                            Optional.ofNullable(profileImage.notes()).orElse("")
+                    );
+                })
+                .toList();
+
         var profileResponse = new ProfileResponse(
                 profile.id(),
                 profile.name(),
                 profile.email(),
                 profile.description(),
-                groupedVenues
+                groupedVenues,
+                images
         );
+
         return profileResponse;
     }
 }

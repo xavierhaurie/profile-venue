@@ -8,6 +8,7 @@ public record ProfileResponse(
         String name,
         String email,
         String description,
-        Map<Long, List<ProfileVenueSummary>> venues
+        Map<Long, List<ProfileVenueSummary>> venues,
+        List<ProfileImageSummary> images
 ) {
 }

@@ -13,17 +13,14 @@ public class Image {
     String caption;
     @Column(name = "url")
     String url;
-    @Column(name = "profileId")
-    Long profileId;
 
     public Image() {
     }
 
-    public Image(String title, String caption, String url, Long profileId) {
+    public Image(String title, String caption, String url) {
         this.title = title;
         this.caption = caption;
         this.url = url;
-        this.profileId = profileId;
     }
 
     public Long getId() {
@@ -58,11 +55,4 @@ public class Image {
         this.url = url;
     }
 
-    public Long getProfileId() {
-        return profileId;
-    }
-
-    public void setProfileId(Long profileId) {
-        this.profileId = profileId;
-    }
 }

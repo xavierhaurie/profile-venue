@@ -1,10 +1,12 @@
 package com.artisttools.profile.controller;
 
 import com.artisttools.profile.dto.ProfileDTO;
+import com.artisttools.profile.dto.ProfileImageDTO;
 import com.artisttools.profile.dto.ProfileVenueDTO;
 import com.artisttools.profile.entity.Profile;
 import com.artisttools.profile.entity.ProfileVenue;
 import com.artisttools.profile.exception.ProfileNotFoundException;
+import com.artisttools.profile.repository.ProfileImageRepository;
 import com.artisttools.profile.repository.ProfileRepository;
 import com.artisttools.profile.repository.ProfileVenueRepository;
 import org.slf4j.Logger;
@@ -18,10 +20,15 @@ public class ProfilesController {
 
     private final ProfileRepository profileRepository;
     private final ProfileVenueRepository profileVenueRepository;
+    private final ProfileImageRepository profileImageRepository;
+
     public ProfilesController(ProfileRepository profileRepository,
-                              ProfileVenueRepository profileVenueRepository) {
+                              ProfileVenueRepository profileVenueRepository,
+                              ProfileImageRepository profileImageRepository
+    ) {
         this.profileRepository = profileRepository;
         this.profileVenueRepository = profileVenueRepository;
+        this.profileImageRepository = profileImageRepository;
     }
 
     private Logger logger = LoggerFactory.getLogger(ProfilesController.class);
@@ -70,6 +77,7 @@ public class ProfilesController {
         return ProfileDTO.from(profile);
     }
 
+    // CALL TO REPOSITORY etc. NEEDS TO BE IN A SERVICE CLASS
     @PostMapping("/profile/venue/create")
     public ProfileVenueDTO createProfileVenue(@RequestBody ProfileVenueDTO profileVenueDTO) {
         logger.info("createProfileVenue() called with profileVenueDTO {}", profileVenueDTO);

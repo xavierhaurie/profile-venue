@@ -32,7 +32,7 @@ public class ImageController {
 
     private final Logger logger = LoggerFactory.getLogger(ImageController.class);
 
-    @PostMapping(value = "/images/upload", consumes = "multipart/form-data")
+    @PostMapping(value = "/image/upload", consumes = "multipart/form-data")
     public ResponseEntity<Image> uploadImage(
         @ModelAttribute ImageDTO imageDTO,
         @RequestParam("file") MultipartFile file) {
@@ -59,7 +59,7 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @GetMapping("/images/{imageId}")
+    @GetMapping("/image/{imageId}")
     public ImageDTO getImage(@PathVariable Long imageId) {
 
         logger.info("getImage() called with imageId {}", imageId);
@@ -70,16 +70,6 @@ public class ImageController {
         return imageDTO;
     }
 
-    @GetMapping("/images/profile/{profileId}")
-    public List<ImageDTO> getImagesByProfile(@PathVariable Long profileId) {
-        logger.info("getImagesByProfile() called with profileId {}", profileId);
-        List<ImageDTO> imageDTOs = imageRepository.findByProfileId(profileId)
-                .stream()
-                .map(ImageDTO::from)
-                .toList();
-
-        return imageDTOs;
-    }
 
 }
 

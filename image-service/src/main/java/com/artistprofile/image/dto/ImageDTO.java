@@ -2,14 +2,14 @@ package com.artistprofile.image.dto;
 
 import com.artistprofile.image.entity.Image;
 
-public record ImageDTO(String title, String caption, String url, Long profileId) {
+public record ImageDTO(String title, String caption, String url) {
 
     static public ImageDTO from(Image i) {
         return new ImageDTO(
                 i.getTitle(),
                 i.getCaption(),
-                i.getUrl(),
-                i.getProfileId());
+                i.getUrl()
+        );
     }
 
     public Image toEntity() {
@@ -17,7 +17,6 @@ public record ImageDTO(String title, String caption, String url, Long profileId)
         image.setTitle(this.title);
         image.setCaption(this.caption);
         image.setUrl(this.url);
-        image.setProfileId(this.profileId);
         // Map other fields if necessary
         return image;
     }

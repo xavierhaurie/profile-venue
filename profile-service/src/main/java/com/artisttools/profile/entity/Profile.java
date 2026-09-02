@@ -17,17 +17,14 @@ public class Profile {
     @Column(name = "description")
     String description;
     // later, list of images
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProfileVenue> profileVenues = new ArrayList<>();
 
     public Profile() {
     }
 
-    public Profile(String name, String email, String description, List<ProfileVenue> profileVenues) {
+    public Profile(String name, String email, String description, List<ProfileImage> profileImages) {
         this.name = name;
         this.email = email;
         this.description = description;
-        this.profileVenues = profileVenues;
     }
 
     public Long getId() {
@@ -60,14 +57,6 @@ public class Profile {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<ProfileVenue> getProfileVenues() {
-        return profileVenues;
-    }
-
-    public void setProfileVenues(List<ProfileVenue> profileVenues) {
-        this.profileVenues = profileVenues;
     }
 
 }
